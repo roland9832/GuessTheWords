@@ -12,12 +12,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 public class LetterFragment extends Fragment {
+
+    private static final String CORRECT_ANSWER = "key"; // Correct answer
+    private int triesCount = 0;
 
     private EditText editText;
     private TextView triesTextView;
-    private int triesCount = 0;
-    private String correctItem = "key"; // Change this to the correct item
+    private Button checkAnswerButton;
 
     @Nullable
     @Override
@@ -26,26 +41,37 @@ public class LetterFragment extends Fragment {
 
         editText = rootView.findViewById(R.id.editTextText2);
         triesTextView = rootView.findViewById(R.id.textView2);
+        checkAnswerButton = rootView.findViewById(R.id.checkAnswerButton);
 
-        rootView.findViewById(R.id.bottomNavigationView).setOnClickListener(view -> checkInput());
+        checkAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAnswerAndNavigate();
+            }
+        });
 
         return rootView;
     }
 
-    private void checkInput() {
-        String userInput = editText.getText().toString().trim();
-        if (userInput.equalsIgnoreCase(correctItem)) {
-            // Navigate to AlphabetFragment if correct
-            Navigation.findNavController(requireView()).navigate(R.id.action_letterFragment_to_alphabetFragment);
+    private void checkAnswerAndNavigate() {
+        String userAnswer = editText.getText().toString().trim();
+        if (userAnswer.equalsIgnoreCase(CORRECT_ANSWER)) {
+            navigateToAlphabetFragment(userAnswer);
         } else {
-            // Increment tries count and update TextView
-            triesCount++;
-            updateTriesTextView();
+            updateTriesCount();
         }
     }
 
-    private void updateTriesTextView() {
-        triesTextView.setText("Tries: " + toString(triesCount));
+    private void navigateToAlphabetFragment(String userAnswer) {
+        Bundle bundle = new Bundle();
+        bundle.putString("userAnswer", userAnswer);
+        Navigation.findNavController(requireView()).navigate(R.id.action_letterFragment_to_alphabetFragment, bundle);
+    }
+
+    private void updateTriesCount() {
+        triesCount++;
+        triesTextView.setText("Tries" + triesCount);
     }
 }
+
 

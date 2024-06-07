@@ -28,8 +28,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void navigateToAlphabetFragment(String buttonId) {
-        HomeFragmentDirections.ActionHomeFragmentToAlphabetFragment action =
-                HomeFragmentDirections.actionHomeFragmentToAlphabetFragment(buttonId);
-        Navigation.findNavController(requireView()).navigate(action);
+        Bundle bundle = new Bundle();
+        bundle.putString("buttonId", buttonId);
+        NavController navController = Navigation.findNavController(requireView());
+        navController.navigate(R.id.action_homeFragment_to_alphabetFragment, bundle);
     }
 }
